@@ -1,21 +1,32 @@
-<section ng-if="hasData"class="dashboard-section">
-    <h2 class="section-title">{{displayName || diseaseName}}</h2>  
-    <table class="h-scroll pivot-table">
+<section ng-if="hasData" class="dashboard-section">
+    <h2 class="section-title">{{displayName || diseaseName}}</h2>
+    <table class="">
         <thead>
-        <tr>
-            <th>Visits</th>
-            <th ng-repeat="conceptName in result.conceptNames">{{conceptName}}</th>
-        </tr>
+        <!--<tr>-->
+        <th>Visits</th>
+        <th ng-repeat="(visitDate, values) in result.tabularData">{{visitDate}}</th>
+        <!--</tr>-->
         </thead>
         <tbody>
-            <tr ng-repeat="(visitDate,values) in result.tabularData">
-                <td>
-                    <strong>{{visitDate | date: 'dd MMM yy'}}</strong>
-                </td> 
-                <td ng-repeat="conceptName in result.conceptNames" ng-class="{'is-abnormal': tabularData[visitDate][conceptName].abnormal}">
-                    {{result.tabularData[visitDate][conceptName].value}}
-                </td>
-            </tr>
+        <tr ng-repeat="conceptName in result.conceptNames">
+            <!--ng-repeat="(visitDate,values) in result.tabularData">-->
+            <!--<td>-->
+                <!--<strong>{{visitDate | date: 'dd MMM yy'}}</strong>-->
+            <!--</td>-->
+            <td><strong>{{conceptName}}</strong></td>
+            <td ng-repeat="visit in result.tabularData"
+                ng-class="{'is-abnormal': visit[conceptName].abnormal}">
+                <table>
+                    <tbody>
+                    <tr ng-repeat="val in visit[conceptName]">
+                        <td style="border: none;">
+                            {{val.value}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
         </tbody>
-    </table>     
+    </table>
 </section>
