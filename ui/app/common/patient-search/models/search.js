@@ -27,7 +27,7 @@ Bahmni.Common.PatientSearch.Search = function(searchTypes) {
 
     self.fetchActivePatientList = function(){
         return self.activePatients.length;
-    }
+    };
 
     self.updatePatientList = function (patientList) {
         self.activePatients = patientList.map(mapPatient);
@@ -53,18 +53,14 @@ Bahmni.Common.PatientSearch.Search = function(searchTypes) {
 
 	self.isSelectedSearch = function(searchType) {
         return self.searchType == searchType;
-    }
-
-    self.showPatientCount = function(searchType) {
-        return self.isSelectedSearch(searchType) && self.isCurrentSearchLookUp();
-    }
+    };
 
     self.isCurrentSearchLookUp = function() {
         return self.searchType && self.searchType.handler;
-    }
+    };
 
-    self.showCountOnSearchParameter = function(searchType){
-        return self.showPatientCount(searchType) && self.searchParameter;
+    self.showPatientCountOnSearchParameter = function(searchType){
+        return showPatientCount(searchType) && self.searchParameter;
     };
 
     function mapPatient(patient) {
@@ -77,4 +73,8 @@ Bahmni.Common.PatientSearch.Search = function(searchTypes) {
     var matchesNameOrId = function (patient) {
         return patient.display.toLowerCase().search(self.searchParameter.toLowerCase()) !== -1;
     };
-}
+
+    var showPatientCount = function(searchType) {
+        return self.isSelectedSearch(searchType) && self.isCurrentSearchLookUp();
+    };
+};

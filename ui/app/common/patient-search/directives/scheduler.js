@@ -1,13 +1,9 @@
 'use strict';
 
 angular.module('bahmni.common.patientSearch')
-    .directive('patientCount', function (spinner, patientService, $rootScope, $interval) {
-        var controller = function($scope) {
-
-        };
+    .directive('scheduler', function (spinner, patientService, $rootScope, $interval) {
 
         var link = function($scope,element,attrs){
-
 
             var promise;
 
@@ -24,30 +20,26 @@ angular.module('bahmni.common.patientSearch')
                 }
             };
 
-            $scope.$watch(function(){return $scope.search.searchParameter}, function(value) {
+            $scope.$watch(function(){return $scope.watchOn}, function(value) {
                 if($scope.refreshTime > 0){
                     value ? cancelSchedule() : startSchedule();
                 }
             });
 
-            $scope.triggerFunction;
+            $scope.triggerFunction();
 
             $scope.$on('$destroy', function() {
                 cancelSchedule();
             });
         };
 
-        //var template = '<span>({{count}})</span>';
-
         return {
             restrict: 'A',
-            controller: controller,
             link: link,
             scope: {
                 refreshTime: "=",
-                search: "=",
+                watchOn: "=",
                 triggerFunction: "&"
             }
-            //template: template
         };
     });

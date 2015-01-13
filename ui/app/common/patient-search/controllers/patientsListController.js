@@ -30,7 +30,7 @@ angular.module('bahmni.common.patientSearch')
         $scope.getPatientCount = function (searchType) {
             var params = { q: searchType.handler, v: "full", provider_uuid: $rootScope.currentProvider.uuid };
             spinner.forPromise(patientService.findPatients(params)).then(function (response) {
-                $scope.patientCount = response.data.length;
+                searchType.patientCount = response.data.length;
                 if ($scope.search.isSelectedSearch(searchType)) {
                     $scope.search.updatePatientList(response.data);
                 }
@@ -49,14 +49,6 @@ angular.module('bahmni.common.patientSearch')
             }
         };
 
-        var calculateRefreshTime = function(){
-            if($scope.search.searchParameter == ''){
-                $scope.refreshTime = 0;
-            }else{
-                $scope.refreshTime = 10000;
-            }
-        };
-        
         var fetchPatients = function () {
             if($scope.search.isCurrentSearchLookUp()) {
                 var params = { q: $scope.search.searchType.handler, v: "full", provider_uuid: $rootScope.currentProvider.uuid };
