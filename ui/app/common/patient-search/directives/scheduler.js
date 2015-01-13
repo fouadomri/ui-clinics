@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.patientSearch')
-    .directive('scheduler', function (spinner, patientService, $rootScope, $interval) {
+    .directive('scheduler', function ($interval) {
 
         var link = function($scope,element,attrs){
 

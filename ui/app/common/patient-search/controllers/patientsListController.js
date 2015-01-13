@@ -29,7 +29,7 @@ angular.module('bahmni.common.patientSearch')
 
         $scope.getPatientCount = function (searchType) {
             var params = { q: searchType.handler, v: "full", provider_uuid: $rootScope.currentProvider.uuid };
-            spinner.forPromise(patientService.findPatients(params)).then(function (response) {
+            patientService.findPatients(params).then(function (response) {
                 searchType.patientCount = response.data.length;
                 if ($scope.search.isSelectedSearch(searchType)) {
                     $scope.search.updatePatientList(response.data);
