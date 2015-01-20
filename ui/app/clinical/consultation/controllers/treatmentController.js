@@ -124,6 +124,9 @@ angular.module('bahmni.clinical')
                 $scope.treatment.dosingInstructionType = Bahmni.Clinical.Constants.flexibleDosingInstructionsClass;
                 var newDrugOrder = $scope.treatment;
                 if(newDrugOrder.durationInDays < 1){
+                    if(!newDrugOrder.isScheduled()){
+                        newDrugOrder.effectiveStartDate = DateUtil.now();
+                    }
                     newDrugOrder.effectiveStopDate = DateUtil.addHours(DateUtil.parse(newDrugOrder.effectiveStartDate), newDrugOrder.durationInDays*24);
                 }
                 else{
@@ -161,13 +164,17 @@ angular.module('bahmni.clinical')
             };
             var setEffectiveDates = function (newDrugOrder, existingDrugOrders) {
                 existingDrugOrders.forEach(function (existingDrugOrder) {
-                    if (DateUtil.isSameDate(existingDrugOrder.effectiveStartDate, newDrugOrder.effectiveStopDate) && !DateUtil.isSameDate(existingDrugOrder.effectiveStopDate, newDrugOrder.effectiveStartDate)) {
+                    if (DateUtil.isSameDate(existingDrugOrder.effectiveStartDate, newDrugOrder.effectiveStopDate) &&
+                        !DateUtil.isSameDate(existingDrugOrder.effectiveStopDate, newDrugOrder.effectiveStartDate) &&
+                        !DateUtil.isSameDate(newDrugOrder.effectiveStartDate, newDrugOrder.effectiveStopDate)
+                    ) {
                         newDrugOrder.effectiveStopDate = DateUtil.subtractSeconds(existingDrugOrder.effectiveStartDate, 1);
                         if(newDrugOrder.previousOrderUuid){
                             newDrugOrder.autoExpireDate = newDrugOrder.effectiveStopDate;
                         }
                     }
-                    if (DateUtil.isSameDate(existingDrugOrder.effectiveStopDate, newDrugOrder.effectiveStartDate) && DateUtil.isSameDate(DateUtil.addSeconds(existingDrugOrder.effectiveStopDate, 1), newDrugOrder.effectiveStartDate)) { //compare date part only of datetime
+                    if (DateUtil.isSameDate(existingDrugOrder.effectiveStopDate, newDrugOrder.effectiveStartDate) &&
+                        DateUtil.isSameDate(DateUtil.addSeconds(existingDrugOrder.effectiveStopDate, 1), newDrugOrder.effectiveStartDate)) { //compare date part only of datetime
                         newDrugOrder.effectiveStartDate = DateUtil.addSeconds(existingDrugOrder.effectiveStopDate, 1);
                     }
                 });

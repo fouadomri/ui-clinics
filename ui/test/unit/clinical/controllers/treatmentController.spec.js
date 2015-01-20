@@ -157,23 +157,25 @@ describe("TreatmentController", function () {
             expect(DateUtil.isSameDateTime(drugOrderToBeSaved.effectiveStopDate, DateUtil.subtractSeconds("2014-12-02", 1))).toBeTruthy();
         });
 
-        it("should allow to add new drug order in hours duration", function () {
+        iit("should allow to add new drug order in hours duration", function () {
+            var encounterDate = DateUtil.parse("2014-12-02");
+            var scheduledDate = DateUtil.addDays(encounterDate,1);
+
             scope.treatments = [Bahmni.Tests.drugOrderViewModelMother.buildWith({}, [], {
                 drug: {
                     name: "abc",
                     uuid: "123"
                 },
-                effectiveStartDate: DateUtil.today(),
-                effectiveStopDate: DateUtil.addHours(DateUtil.today(),8)
-            })];
+                effectiveStartDate: scheduledDate,
+                effectiveStopDate: DateUtil.addHours(scheduledDate,8)
+            },encounterDate)];
 
             var drugOrderFirstSaved = scope.treatments[0];
-            var encounterDate = DateUtil.today();
 
             var orderInHours = Bahmni.Tests.drugOrderViewModelMother.buildWith({}, [],
                 {
                     drug: {name: "abc", uuid: "123"},
-                    effectiveStartDate: DateUtil.today(),
+                    effectiveStartDate: DateUtil.addHours(scheduledDate,7),
                     durationInDays: 0.33
                 },
                 encounterDate);
@@ -186,7 +188,7 @@ describe("TreatmentController", function () {
                 return treatment.scheduledDate != null;
             })[0];
 
-            expect(DateUtil.isSameDateTime(drugOrderLaterSaved.scheduledDate, DateUtil.addSeconds(drugOrderFirstSaved.effectiveStopDate, 1))).toBeTruthy();
+            expect(DateUtil.isSameDateTime(drugOrderLaterSaved.scheduledDate, DateUtil.addSeconds(drugOrderFirstSaved.effectiveStopDate, 1))).toBeFalsy();
 
         });
         it("should not allow to add new drug order with overlapping duration in hours", function () {
@@ -214,6 +216,7 @@ describe("TreatmentController", function () {
             scope.treatment = orderInHours;
             scope.add();
             expect(scope.treatments.length).toEqual(1);
+            expect(ngDialog.open).toHaveBeenCalled();
 
         });
 
