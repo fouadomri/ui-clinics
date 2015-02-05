@@ -85,6 +85,7 @@ Bahmni.Common = Bahmni.Common || {};
         admissionCode: 'ADMIT',
         dischargeCode: 'DISCHARGE',
         transferCode: 'TRANSFER',
+        cancelDischargeCode: 'CANCEL_DISCHARGE',
         vitalsConceptName: "Vitals",
         heightConceptName: "HEIGHT",
         weightConceptName: "WEIGHT",
