@@ -6,7 +6,6 @@ angular.module('bahmni.clinical')
         function ($scope, $location, encounterService, clinicalAppConfigService, diseaseTemplateService, dashboardConfig,printer,$state,spinner) {
 
             $scope.activeVisit = $scope.visitHistory.activeVisit;
-            $scope.patientSummary = {};
             $scope.activeVisitData = {};
             $scope.obsIgnoreList = clinicalAppConfigService.getObsIgnoreList();
             $scope.dashboardConfig = dashboardConfig;
@@ -36,7 +35,7 @@ angular.module('bahmni.clinical')
                 return diseaseTemplateService.getLatestDiseaseTemplates($scope.patient.uuid, dashboardConfig.getDiseaseTemplateSections())
                     .then(function (diseaseTemplates) {
                         $scope.diseaseTemplates = diseaseTemplates;
-                        $scope.patientDashboardSections = dashboardConfig.getDashboardSections(diseaseTemplates);
+                        dashboardConfig.getDashboardSections(diseaseTemplates);
                         $scope.currentDashboardTemplateUrl = $state.current.views.content.templateUrl;
                     });
             };

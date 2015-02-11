@@ -3,7 +3,7 @@
 Bahmni.Clinical.DashboardConfig = function (config) {
 
     var self = this;
-    this.dashboards = config;
+    this.dashboards = _.map(config, Bahmni.Common.DisplayControl.Dashboard.create);
     this.openDashboards = [];
 
     this.getDefaultDashboard = function () {
@@ -13,9 +13,9 @@ Bahmni.Clinical.DashboardConfig = function (config) {
         return this.currentDashboard;
     };
 
-    this.findOpenDashboard = function(dashboard) {
+    this.findOpenDashboard = function (dashboard) {
         return !_.findWhere(this.openDashboards, {'dashboardName': dashboard.dashboardName});
-    }
+    };
 
     this.getUnOpenedDashboards = function () {
         return _.filter(this.dashboards, function (dashboard) {
@@ -40,9 +40,7 @@ Bahmni.Clinical.DashboardConfig = function (config) {
     };
 
     this.getSectionByName = function (name) {
-        return _.find(this.currentDashboard.sections, function (section) {
-            return section.name === name;
-        }) || {};
+        return this.currentDashboard.getSectionByName(name);
     };
 
     this.isCurrentDashboard = function (dashboard) {
@@ -50,18 +48,11 @@ Bahmni.Clinical.DashboardConfig = function (config) {
     };
 
     this.getDiseaseTemplateSections = function () {
-        return _.rest(this.currentDashboard && this.currentDashboard.sections, function (section) {
-            return section.name !== "diseaseTemplate";
-        });
+        return this.currentDashboard.getDiseaseTemplateSections();
     };
 
     this.getDashboardSections = function (diseaseTemplates) {
-        var sectionsToBeDisplayed = _.filter(this.currentDashboard && this.currentDashboard.sections, function (section) {
-            return section.name !== "diseaseTemplate" || _.find(diseaseTemplates, function (diseaseTemplate) {
-                return diseaseTemplate.name === section.templateName && diseaseTemplate.obsTemplates.length > 0;
-            });
-        });
-        return _.map(sectionsToBeDisplayed, Bahmni.Clinical.PatientDashboardSection.create);
+        return this.currentDashboard.getDashboardSections(diseaseTemplates);
     };
 
     this.showTabs = function () {
@@ -72,7 +63,7 @@ Bahmni.Clinical.DashboardConfig = function (config) {
         return !_.isEmpty(this.currentDashboard.printing);
     };
 
-    this.getPrintConfigForCurrentDashboard = function(){
+    this.getPrintConfigForCurrentDashboard = function () {
         return this.getCurrentDashboard().printing;
     }
 };
