@@ -107,11 +107,11 @@
     .dashboard-section-wrapper {
         margin: 0;
         .orders-section-left {
-            width: 22%;
+            width: 26%;
             float: left;
             margin: 3% 0 2% 10px;
             .multi-select-lab-tests {
-                width: 93%;
+                width: 95%;
                 ul {
                     li {
                         a {
@@ -132,7 +132,7 @@
             }
         }
         .orders-section-right {
-            width: 77%;
+            width: 73%;
             float: right;
             margin-top: 2%;
         }
@@ -180,7 +180,7 @@
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: 249px;
+                width: 233px;
                 white-space: nowrap;
                 @media (max-width: 1024px) {
                     width: 200px;
@@ -240,6 +240,29 @@
         }
     }
 }
+.selectedOrderNoteContainer-dialog.ngdialog-theme-default{
+    .ngdialog-content{
+        width: 680px;
+        padding: 2em;
+    }
+    .selectedOrderNoteContainer{
+        span{
+            font-family: OpenSans;
+            font-size: 20px;
+            padding-bottom: 15px;
+            display: block;
+            text-transform: capitalize;
+        }
+        textarea{
+            width: 100%;
+            padding:10px;
+        }
+        .btn-group{
+            margin-top:15px;
+        }
+    }
+}
+
 
 // .sample-type {
 //     margin-left: 10px;
