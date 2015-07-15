@@ -4,7 +4,7 @@ describe("ensure that the directive order-selector works properly", function () 
 
     var element, scope, conceptClass, title,httpBackend,rootScope,compile,q;
 
-    var html = '<order-selector orders="consultation.testOrders" root-concept="concept" child-orders="childOrders" concept-class="conceptClass" consultation="consultation" title="title"></order-selector>';
+    var html = '<order-selector orders="consultation.orders" root-concept="concept" child-orders="childOrders" concept-class="conceptClass" consultation="consultation" title="title"></order-selector>';
 
     var concept = {
     	"conceptClass": "LabSet",
@@ -32,7 +32,7 @@ describe("ensure that the directive order-selector works properly", function () 
     };
 
     var consultation = {
-    	"testOrders" : [
+    	"orders" : [
 	    	{
 				"dateCreated": "2015-04-22T19:16:13.000+0530",
 				"instructions": null,

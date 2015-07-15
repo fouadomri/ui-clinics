@@ -3,7 +3,7 @@
 angular.module('bahmni.clinical')
     .controller('OrderController', ['$scope', 'allOrderables','ngDialog',
         function ($scope, allOrderables, ngDialog) {
-            $scope.consultation.testOrders = $scope.consultation.testOrders || [];
+            $scope.consultation.orders = $scope.consultation.orders || [];
             $scope.consultation.childOrders = $scope.consultation.childOrders || [];
             $scope.allOrdersTemplates = allOrderables;
 
@@ -38,12 +38,12 @@ angular.module('bahmni.clinical')
 
             $scope.updateSelectedOrdersForActiveTab = function(){
                 var activeTabTestConcepts = _.pluck(_.flatten(_.pluck($scope.getOrderTemplate($scope.activeTab.name).setMembers, 'setMembers')), 'uuid');
-                $scope.selectedOrders =  _.filter($scope.consultation.testOrders,function(testOrder){
-                       return _.indexOf(activeTabTestConcepts, testOrder.concept.uuid) != -1;
+                $scope.selectedOrders =  _.filter($scope.consultation.orders,function(order){
+                       return _.indexOf(activeTabTestConcepts, order.concept.uuid) != -1;
                 });
             };
 
-            $scope.$watchCollection('consultation.testOrders', $scope.updateSelectedOrdersForActiveTab);
+            $scope.$watchCollection('consultation.orders', $scope.updateSelectedOrdersForActiveTab);
 
             var collapseExistingActiveSection = function(section){
                 section && (section.klass="");
@@ -79,7 +79,7 @@ angular.module('bahmni.clinical')
             };
 
             $scope.diSelect = function(selectedOrder) {
-                var order = _.find($scope.consultation.testOrders, function(order) {
+                var order = _.find($scope.consultation.orders, function(order) {
                     return order.concept.uuid === selectedOrder.concept.uuid;
                 });
                 if (order.uuid) {
@@ -126,7 +126,7 @@ angular.module('bahmni.clinical')
             };
 
             var removeOrder = function(order){
-                _.remove($scope.consultation.testOrders, function(o){
+                _.remove($scope.consultation.orders, function(o){
                     return o.concept.uuid == order.concept.uuid;
                 });
             };

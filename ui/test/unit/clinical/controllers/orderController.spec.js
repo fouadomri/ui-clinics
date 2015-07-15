@@ -12,7 +12,7 @@ describe("OrderController", function () {
         rootScope = $rootScope;
         ngDialog = jasmine.createSpyObj('ngDialog', ['open', 'close']);
 
-        scope.consultation = {testOrders: []};
+        scope.consultation = {orders: []};
 
         $controller('OrderController', {
             $scope: scope,
@@ -42,43 +42,43 @@ describe("OrderController", function () {
         });
 
         it("diSelect() should unselect order", function () {
-            scope.consultation.testOrders.push(testOrders[0]);
-            scope.consultation.testOrders.push(testOrders[1]);
+            scope.consultation.orders.push(orders[0]);
+            scope.consultation.orders.push(orders[1]);
             scope.$digest();
 
             //diselect already saved order
             scope.diSelect({"concept": {"uuid": "3b5ea063-b6e5-48cd-b39d-dce69f00f26a"}});
             scope.$digest();
-            expect(scope.consultation.testOrders[0].voided).toBe(true);
+            expect(scope.consultation.orders[0].voided).toBe(true);
             expect(scope.selectedOrders.length).toBe(2);
 
             //diselect newly added order
             scope.diSelect({"concept": {"uuid": "3c5ea063-b6e5-48cd-b39d-dce69f00f26a"}});
             scope.$digest();
-            expect(scope.consultation.testOrders.length).toBe(1);
+            expect(scope.consultation.orders.length).toBe(1);
             expect(scope.selectedOrders.length).toBe(1);
 
             //cleaning up voided
-            scope.consultation.testOrders[0].voided = false;
+            scope.consultation.orders[0].voided = false;
         });
 
         it("diSelect() should unselect order and its child orders", function () {
-            scope.consultation.testOrders.push(testOrders[0]);
-            scope.consultation.testOrders.push(testOrders[1]);
+            scope.consultation.orders.push(orders[0]);
+            scope.consultation.orders.push(orders[1]);
             scope.consultation.childOrders.push({"uuid" : "123456"});
             scope.$digest();
 
             //diselect already saved order
-            expect(scope.consultation.testOrders[0].voided).toBe(false);
+            expect(scope.consultation.orders[0].voided).toBe(false);
             scope.diSelect({"concept": {"uuid": "3b5ea063-b6e5-48cd-b39d-dce69f00f26a"}});
             scope.$digest();
-            expect(scope.consultation.testOrders[0].voided).toBe(true);
+            expect(scope.consultation.orders[0].voided).toBe(true);
             expect(scope.selectedOrders.length).toBe(2);
 
             //diselect newly added order
             scope.diSelect({"concept": {"uuid": "3c5ea063-b6e5-48cd-b39d-dce69f00f26a"}});
             scope.$digest();
-            expect(scope.consultation.testOrders.length).toBe(1);
+            expect(scope.consultation.orders.length).toBe(1);
             expect(scope.selectedOrders.length).toBe(1);
             expect(scope.consultation.childOrders.length).toBe(0);
         });
@@ -136,7 +136,7 @@ describe("OrderController", function () {
         });
 
         it("should update the selectedOrders when some other tab is activated", function(){
-            scope.consultation.testOrders.push({
+            scope.consultation.orders.push({
                     "uuid": undefined,
                     "concept": {
                         "uuid": "ab137c0f-5a23-4314-ab8d-29b8ff91fbfb",
@@ -245,7 +245,7 @@ describe("OrderController", function () {
             }
         },
 
-        testOrders =  [
+        orders =  [
                 {
                     "dateCreated": "2015-04-22T19:16:13.000+0530",
                     "instructions": null,
