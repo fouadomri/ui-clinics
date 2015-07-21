@@ -3,7 +3,7 @@
 angular.module('bahmni.common.uiHelper')
     .directive('timeline', function () {
         var link = function ($scope, $element, $attrs) {
-            var svg = d3.select('#'+ $attrs.id).append("svg").attr('width',100+'%' ).attr('height', 110);
+            var svg = d3.select($element[0]).append("svg").attr('width',100+'%' ).attr('height', 110);
             var elementDimensions = $element[0].getBoundingClientRect();
             var sortedDates = _.sortBy(_.pluck($scope.config.data, 'date'));
             var uniqueStates = _.uniq(_.pluck($scope.config.data, 'state'));
@@ -27,7 +27,7 @@ angular.module('bahmni.common.uiHelper')
                 .selectAll("line")
                     .attr("y2", 14)
                     .attr("y1", -8)
-                    .attr("x2", 0)
+                    .attr("x2", 0);
 
             var colors = d3.scale.category10();
 
@@ -50,7 +50,7 @@ angular.module('bahmni.common.uiHelper')
             }
 
             //Draw Legend
-            var legendContainer = d3.select('#'+ $attrs.id).append("div").classed("legend", true);
+            var legendContainer = d3.select($element[0]).append("div").classed("legend", true);
             var legendItems = legendContainer.selectAll(".item").data(uniqueStates);
             legendItems.enter().append("div").classed("item",true);
             legendItems.style("background-color", function(d,i) { return colors(i)})
