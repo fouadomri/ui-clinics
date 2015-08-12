@@ -15,11 +15,13 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                     $scope.activePrograms = [];
                     $scope.endedPrograms = [];
                     if (data.data.results) {
-                        _.forEach(data.data.results, function (result) {
-                            if (result.dateCompleted) {
-                                $scope.endedPrograms.push(result);
+                        var programs = filterRetiredPrograms(data.data.results);
+                        _.forEach(programs, function (program) {
+                            program.program.allWorkflows = filterRetiredWorkflowsAndStates(program.program.allWorkflows);
+                            if (program.dateCompleted) {
+                                $scope.endedPrograms.push(program);
                             } else {
-                                $scope.activePrograms.push(result);
+                                $scope.activePrograms.push(program);
                             }
                         })
                     }
@@ -31,12 +33,40 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                 return DateUtil.parse(currentDate || DateUtil.endOfToday());
             };
 
+            var filterRetiredPrograms = function (programs) {
+                return _.filter(programs, function (program) {
+                    return !program.retired;
+                });
+            };
+
+            var filterRetiredWorkflowsAndStates = function(workflows){
+                var allWorkflows = _.filter(workflows, function (workflow) {
+                    return !workflow.retired;
+                });
+                _.forEach(allWorkflows, function (workflow) {
+                    workflow.states = _.filter(workflow.states, function (state) {
+                        return !state.retired
+                    })
+                });
+                return allWorkflows;
+            };
+
+            var filterRetiredOutcomes = function(outcomes){
+                return _.filter(outcomes, function(outcome){
+                    return !outcome.retired;
+                })
+            };
+
             var init = function () {
                 $scope.programEnrollmentDate = getCurrentDate();
                 spinner.forPromise(programService.getAllPrograms().then(function (data) {
-                    $scope.allPrograms = _.filter(data.data.results, function (program) {
-                        return program.retired != true;
-                    });
+                    $scope.allPrograms = filterRetiredPrograms(data.data.results);
+                    _.forEach($scope.allPrograms, function(program){
+                        program.allWorkflows = filterRetiredWorkflowsAndStates(program.allWorkflows);
+                        if(program.outcomesConcept){
+                          program.outcomesConcept.setMembers = filterRetiredOutcomes(program.outcomesConcept.setMembers);
+                        }
+                    })
                 }));
                 updateActiveProgramsList();
             };
@@ -124,17 +154,22 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                 });
             };
 
-            $scope.setWorkflowStatesWithoutCurrent = function(patientProgram){
-                var currState = getCurrentState(patientProgram.states);
+            var getWorkflowStatesWithoutCurrent = function(patientProgram){
+                var currentState = getCurrentState(patientProgram.states);
                 var states = getStates(patientProgram.program);
-                if(currState){
-                    $scope.workflowStatesWithoutCurrentState =  _.reject(states, function(d){ return d.uuid === currState.state.uuid; });
+                if(currentState){
+                    states = _.reject(states, function(state){ return state.uuid === currentState.state.uuid; });
                 }
+                return states;
+            };
+
+            $scope.setWorkflowStatesWithoutCurrent = function(patientProgram){
+                $scope.workflowStatesWithoutCurrentState = getWorkflowStatesWithoutCurrent(patientProgram);
             };
 
             $scope.savePatientProgram = function (patientProgram) {
                 var startDate = getCurrentDate();
-                var currentState = getCurrentState(patientProgram);
+                var currentState = getCurrentState(patientProgram.states);
                 var currentStateDate = currentState ? DateUtil.parse(currentState.startDate): null;
 
                 if (DateUtil.isBeforeDate(startDate, currentStateDate)) {
@@ -153,14 +188,14 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                 );
             };
 
-            $scope.getOutcomes = function(program) {
+            $scope.setOutcomes = function(program) {
                 var currentProgram = _.findWhere($scope.allPrograms, {uuid: program.uuid});
                 $scope.outComesForProgram = currentProgram.outcomesConcept ? currentProgram.outcomesConcept.setMembers : [];
             };
 
             $scope.endPatientProgram = function(patientProgram) {
                 var dateCompleted = getCurrentDate();
-                var currentState = getCurrentState(patientProgram);
+                var currentState = getCurrentState(patientProgram.states);
                 var currentStateDate = currentState ? DateUtil.parse(currentState.startDate): null;
 
 
@@ -193,20 +228,14 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                 program.ending = !program.ending;
             };
 
-            $scope.getWorkflowStates = function(program){
+            $scope.setWorkflowStates = function(program){
                 $scope.programWorkflowStates = getStates(program);
             };
 
             var getStates = function(program){
                 var states = [];
-                if(program && program.allWorkflows.length ) {
-                    program.allWorkflows.forEach(function(workflow){
-                        if(!workflow.retired && workflow.states.length)
-                            workflow.states.forEach(function(state){
-                                if(!state.retired)
-                                    states.push(state);
-                            });
-                    });
+                if(program && program.allWorkflows.length && program.allWorkflows[0].states.length ) {
+                    states = program.allWorkflows[0].states;
                 }
                 return states;
             };
@@ -216,8 +245,11 @@ angular.module('bahmni.common.uicontrols.programmanagment')
             };
 
             $scope.hasStatesWithoutCurrentState = function(program){
-                var states = getStates(program);
-                return states.length > 1;
+                return !_.isEmpty(getWorkflowStatesWithoutCurrent(program));
+            };
+
+            $scope.hasOutcomes = function(program){
+                return program.outcomesConcept &&!_.isEmpty(program.outcomesConcept.setMembers);
             };
 
             init();
