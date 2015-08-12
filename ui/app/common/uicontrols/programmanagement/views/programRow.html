@@ -4,7 +4,7 @@
         <span class="enrolled-info"> (Enrolled on {{program.dateEnrolled | bahmniDate}})</span>
 
         <div class="program-actions">
-            <button ng-click="toggleEdit(program)" ng-class="{'tab-selected': program.editing}" ng-if="hasStates(program.program)">Change State</button>
+            <button ng-click="toggleEdit(program)" ng-class="{'tab-selected': program.editing}" ng-if="hasStatesWithoutCurrentState(program.program)">Change State</button>
             <button ng-click="toggleEnd(program)" ng-class="{'tab-selected': program.ending}">End Program</button>
         </div>
 

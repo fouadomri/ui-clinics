@@ -212,6 +212,11 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                 return program && !_.isEmpty(program.allWorkflows) && !_.isEmpty($scope.programWorkflowStates)
             };
 
+            $scope.hasStatesWithoutCurrentState = function(program){
+                var states = getStates(program);
+                return states.length > 1;
+            };
+
             init();
         }
     ]);
