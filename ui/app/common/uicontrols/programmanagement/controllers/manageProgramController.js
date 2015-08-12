@@ -7,6 +7,8 @@ angular.module('bahmni.common.uicontrols.programmanagment')
             $scope.allPrograms = [];
             $scope.programWorkflowStates = [];
             $scope.programEdited = {selectedState: ""};
+            $scope.workflowStatesWithoutCurrentState = [];
+            $scope.outComesForProgram = [];
 
             var updateActiveProgramsList = function () {
                 spinner.forPromise(programService.getPatientPrograms($scope.patient.uuid).then(function (data) {
@@ -116,17 +118,18 @@ angular.module('bahmni.common.uicontrols.programmanagment')
               return !_.isEmpty(objectDeepFind(patientProgram, 'outcomeData.uuid'));
             };
 
-            var getCurrentState = function(patientProgram){
-                return _.find(patientProgram.states, {endDate: null});
+            var getCurrentState = function(states){
+                return _.find(states, function(state){
+                    return state.endDate == null;
+                });
             };
 
-            $scope.getWorkflowStatesWithoutCurrent = function(patientProgram){
-                var currState = getCurrentState(patientProgram);
+            $scope.setWorkflowStatesWithoutCurrent = function(patientProgram){
+                var currState = getCurrentState(patientProgram.states);
                 var states = getStates(patientProgram.program);
                 if(currState){
-                    return _.reject(states, function(d){ return d.uuid == currState.state.uuid; });
+                    $scope.workflowStatesWithoutCurrentState =  _.reject(states, function(d){ return d.uuid === currState.state.uuid; });
                 }
-                return states;
             };
 
             $scope.savePatientProgram = function (patientProgram) {
@@ -152,7 +155,7 @@ angular.module('bahmni.common.uicontrols.programmanagment')
 
             $scope.getOutcomes = function(program) {
                 var currentProgram = _.findWhere($scope.allPrograms, {uuid: program.uuid});
-                return currentProgram.outcomesConcept ? currentProgram.outcomesConcept.setMembers : '';
+                $scope.outComesForProgram = currentProgram.outcomesConcept ? currentProgram.outcomesConcept.setMembers : [];
             };
 
             $scope.endPatientProgram = function(patientProgram) {
