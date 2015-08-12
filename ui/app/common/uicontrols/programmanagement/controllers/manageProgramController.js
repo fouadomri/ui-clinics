@@ -59,6 +59,10 @@ angular.module('bahmni.common.uicontrols.programmanagment')
             };
 
             var objectDeepFind = function(obj, path) {
+                if(_.isUndefined(obj)){
+                    return undefined;
+                }
+
                 var paths = path.split('.')
                     , current = obj
                     , i;
@@ -117,7 +121,7 @@ angular.module('bahmni.common.uicontrols.programmanagment')
             };
 
             var getCurrentState = function(patientProgram){
-                return _.find(patientProgram.states, {endDate: null});
+                return _.find(getActiveProgramStates(patientProgram), {endDate: null});
             };
 
             $scope.getWorkflowStatesWithoutCurrent = function(patientProgram){
@@ -187,6 +191,30 @@ angular.module('bahmni.common.uicontrols.programmanagment')
             $scope.toggleEnd = function(program) {
                 program.editing = false;
                 program.ending = !program.ending;
+            };
+
+            $scope.getCurrentStateDisplayName = function(patientProgram){
+                var currState = getCurrentState(patientProgram);
+                var displayName = objectDeepFind(currState, 'state.concept.display');
+                return displayName || 'No state';
+            };
+
+            var getActiveProgramStates = function(patientProgram){
+                return _.reject(patientProgram.states, function(st) {return st.voided});
+            };
+
+            $scope.canRemovePatientState = function(patientProgram){
+                return (getActiveProgramStates(patientProgram).length > 0);
+            };
+
+            $scope.removePatientState = function(patientProgram){
+                var currProgramState = getCurrentState(patientProgram);
+                var currWorkflowStateUuid = objectDeepFind(currProgramState, 'state.uuid');
+                var currProgramStateUuid = objectDeepFind(currProgramState, 'uuid');
+                spinner.forPromise(
+                    programService.deletePatientState(patientProgram.uuid, currProgramStateUuid)
+                        .then(successCallback, failureCallback)
+                );
             };
 
             $scope.getWorkflowStates = function(program){
