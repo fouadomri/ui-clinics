@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .directive('visitsTable', ['patientVisitHistoryService', 'spinner', '$state', function (patientVisitHistoryService, spinner, $state) {
-        var controller = function ($scope) {
+    .directive('visitsTable', ['patientVisitHistoryService', 'spinner', '$state', '$bahmniCookieStore', function (patientVisitHistoryService, spinner, $state, $bahmniCookieStore) {
+        var controller = function ($scope,$rootScope) {
             spinner.forPromise(patientVisitHistoryService.getVisitHistory($scope.patientUuid).then(function (visitHistory) {
                 $scope.visits = visitHistory.visits;
             }));
@@ -28,6 +28,15 @@ angular.module('bahmni.clinical')
             $scope.toggle = function(visit) {
                 visit.isOpen = !visit.isOpen;
             };
+
+            $scope.editConsultation = function(encounter){
+                $bahmniCookieStore.remove(Bahmni.Common.Constants.retrospectiveEntryEncounterDateCookieName);
+                $bahmniCookieStore.put(Bahmni.Common.Constants.retrospectiveEntryEncounterDateCookieName,  encounter.encounterDatetime, {path: '/', expires: 1});
+
+                $rootScope.retrospectiveEntry = Bahmni.Common.Domain.RetrospectiveEntry.createFrom(Bahmni.Common.Util.DateUtil.getDate(encounter.encounterDatetime));
+
+                $state.go('patient.consultation.conceptSet',{conceptSetGroupName: "observations", encounterUuid: encounter.uuid});
+            }
         };
         return {
             restrict: 'E',

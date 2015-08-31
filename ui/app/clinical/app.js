@@ -34,12 +34,11 @@ angular.module('consultation')
                 }
             })
             .state('patient', {
-                url: '/patient/:patientUuid',
+                url: '/patient/:patientUuid?encounterUuid',
                 abstract: true,
                 data: {
                     backLinks: [patientSearchBackLink]
                 },
-
                 views: {
                     'additional-header': {template: '<div ui-view="additional-header"></div>'},
                     'content': {
@@ -47,7 +46,7 @@ angular.module('consultation')
                         controller: function ($scope, patientContext, visitHistory, consultationContext) {
                             $scope.patient = patientContext.patient;
                             $scope.visitHistory = visitHistory;
-                                $scope.consultation = consultationContext;
+                            $scope.consultation = consultationContext;
                         }
                     }
                 },
@@ -60,7 +59,10 @@ angular.module('consultation')
                         return visitHistoryInitialization($stateParams.patientUuid);
                     },
                     consultationContext: function (consultationInitialization, initialization, $stateParams) {
-                        return consultationInitialization($stateParams.patientUuid);
+                        if($stateParams.encounterUuid == 'active') {
+                            return consultationInitialization($stateParams.patientUuid);
+                        }
+                        return consultationInitialization($stateParams.patientUuid, $stateParams.encounterUuid);
                     }
                 }
             })
@@ -266,6 +268,7 @@ angular.module('consultation')
                 templateUrl: 'consultation/views/conceptSet.html',
                 controller: 'ConceptSetPageController'
             })
+
             .state('patient.consultation.notes', {
                 url: '/notes',
                 templateUrl: 'consultation/views/notes.html'
