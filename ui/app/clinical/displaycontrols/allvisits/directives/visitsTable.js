@@ -33,6 +33,9 @@ angular.module('bahmni.clinical')
                 $bahmniCookieStore.remove(Bahmni.Common.Constants.retrospectiveEntryEncounterDateCookieName);
                 $bahmniCookieStore.put(Bahmni.Common.Constants.retrospectiveEntryEncounterDateCookieName,  encounter.encounterDatetime, {path: '/', expires: 1});
 
+                $bahmniCookieStore.remove(Bahmni.Common.Constants.grantProviderAccessDataCookieName);
+                $bahmniCookieStore.put(Bahmni.Common.Constants.grantProviderAccessDataCookieName, encounter.provider, {path: '/', expires: 1});
+
                 $rootScope.retrospectiveEntry = Bahmni.Common.Domain.RetrospectiveEntry.createFrom(Bahmni.Common.Util.DateUtil.getDate(encounter.encounterDatetime));
 
                 $state.go('patient.consultation.conceptSet',{conceptSetGroupName: "observations", encounterUuid: encounter.uuid});
