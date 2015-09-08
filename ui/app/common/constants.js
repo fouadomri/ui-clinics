@@ -126,6 +126,7 @@ Bahmni.Common = Bahmni.Common || {};
         messageForNoDisposition: "No dispositions available.",
         messageForNoFulfillment: "No observations captured for this order.",
         reportsUrl: "/bahmnireports/report",
+        uploadReportTemplateUrl: "/bahmnireports/upload",
         diagnosisStatuses : {"RULED OUT" : "Ruled Out Diagnosis"},
         registartionConsultationPrivilege:'app:common:registration_consultation_link',
         manageIdentifierSequencePrivilege:"Manage Identifier Sequence",
