@@ -45,9 +45,9 @@
                         <option value="application/pdf">PDF</option>
                         <option value="application/vnd.ms-excel-custom">CUSTOM EXCEL</option>
                     </select>
-                    <input id="inputFileUpload{{report.name}}"  ng-show="report.responseType=='application/vnd.ms-excel-custom'" class="input-file-upload"
+                    <input id="inputFileUpload{{report.name}}"  ng-if="report.responseType=='application/vnd.ms-excel-custom'" class="input-file-upload"
                            type="file" accept=".xltm,.xlsm" nv-file-select uploader="uploader"  options="{report: report}" />
-
+                    <!--do not change the above input type file's id - has dependency in generateReport of controller-->
                 </td>
 
                 <td class="reports-action">
