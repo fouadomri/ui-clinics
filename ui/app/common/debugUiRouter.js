@@ -12,7 +12,7 @@ var debugUiRouter = function($rootScope) {
 	});
 
 	$rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams){
-	  console.log('$stateChangeSuccess to '+toState.name+'- fired once the state transition is complete.');
+	  console.log('$stateChangeSuccess from ' + JSON.stringify(fromState) + ' to '+ JSON.stringify(toState))
 	});
 
 	$rootScope.$on('$viewContentLoaded',function(event){

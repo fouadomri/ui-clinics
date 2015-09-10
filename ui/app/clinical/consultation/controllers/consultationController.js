@@ -3,8 +3,10 @@
 angular.module('bahmni.clinical').controller('ConsultationController',
     ['$scope', '$rootScope', '$state', '$location', 'clinicalAppConfigService', 'urlHelper', 'contextChangeHandler',
         'spinner', 'encounterService', 'messagingService', 'sessionService', 'retrospectiveEntryService', 'patientContext', 'consultationContext', '$q','patientVisitHistoryService',
+        '$stateParams',
         function ($scope, $rootScope, $state, $location, clinicalAppConfigService, urlHelper, contextChangeHandler,
-                  spinner, encounterService, messagingService, sessionService, retrospectiveEntryService, patientContext, consultationContext, $q, patientVisitHistoryService) {
+                  spinner, encounterService, messagingService, sessionService, retrospectiveEntryService, patientContext, consultationContext, $q,
+                  patientVisitHistoryService, stateParams) {
             $scope.patient = patientContext.patient;
             $scope.consultation = consultationContext;
 
@@ -52,7 +54,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
 
             var getUrl = function (board) {
                 var urlPrefix = urlHelper.getPatientUrl();
-                var url = board.url ? urlPrefix + "/" + board.url : urlPrefix;
+                var url = "/" + stateParams.configName + (board.url ? urlPrefix + "/" + board.url : urlPrefix);
                 url = url + "?encounterUuid=" + $state.params.encounterUuid;
                 return $location.url(url);
             };

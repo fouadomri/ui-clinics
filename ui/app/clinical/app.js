@@ -10,7 +10,8 @@ angular.module('consultation', ['ui.router', 'bahmni.clinical', 'bahmni.common.c
     'bahmni.common.displaycontrol.pacsOrders', 'bahmni.common.uicontrols.programmanagment', 'pascalprecht.translate', 'ngCookies']);
 angular.module('consultation')
     .config(['$stateProvider', '$httpProvider', '$urlRouterProvider', '$bahmniTranslateProvider', function ($stateProvider, $httpProvider, $urlRouterProvider, $bahmniTranslateProvider) {
-        $urlRouterProvider.otherwise('/patient/search');
+        const DEFAULT_STRING = 'default';
+        $urlRouterProvider.otherwise('/' + DEFAULT_STRING + '/patient/search');
         var patientSearchBackLink = {
             label: "",
             state: "patientsearch",
@@ -21,8 +22,20 @@ angular.module('consultation')
         var homeBackLink = {label: "", url: "../home/", icon: "fa-home"};
 
         $stateProvider
+            .state('context', {
+                url: '/:configName',
+                abstract: true,
+                views: {
+                    'additional-header': {template: '<div ui-view="additional-header"></div>'},
+                    'content': {
+                        template: '<div ui-view="content"></div>'
+                    }
+                }
+            }
+            )
             .state('patientsearch', {
-                url: '/:configName/patient/search',
+                url: '/patient/search',
+                parent: 'context',
                 views: {
                     'content': {
                         templateUrl: '../common/patient-search/views/patientsList.html',
@@ -37,8 +50,8 @@ angular.module('consultation')
                     backLinks: [homeBackLink]
                 },
                 resolve: {
-                    initialization: function (initialization, $stateParams) {
-                        $stateParams.configName = $stateParams.configName  || "DEFAULT";
+                    initializeConfigs: function (initialization, $stateParams) {
+                        $stateParams.configName = $stateParams.configName || DEFAULT_STRING;
                         patientSearchBackLink.state = 'patientsearch({configName: \"' + $stateParams.configName + '\"})';
                         return initialization($stateParams.configName);
                     }
@@ -47,6 +60,7 @@ angular.module('consultation')
             .state('patient', {
                 url: '/patient/:patientUuid?encounterUuid',
                 abstract: true,
+                parent: 'context',
                 data: {
                     backLinks: [patientSearchBackLink]
                 },
@@ -54,10 +68,11 @@ angular.module('consultation')
                     'additional-header': {template: '<div ui-view="additional-header"></div>'},
                     'content': {
                         template: '<div ui-view="content"></div><patient-control-panel patient="patient" visit-history="visitHistory" visit="visit" show="showControlPanel"/>',
-                        controller: function ($scope, patientContext, visitHistory, consultationContext) {
+                        controller: function ($scope, patientContext, visitHistory, consultationContext, $stateParams) {
                             $scope.patient = patientContext.patient;
                             $scope.visitHistory = visitHistory;
                             $scope.consultation = consultationContext;
+                            $scope.configName = $stateParams.configName;
                         }
                     }
                 },
