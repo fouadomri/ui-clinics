@@ -2,6 +2,7 @@
     // padding: 10px;
     margin: 5px 0;
     width: 99.5%;
+
     .null-data-message {
         padding-left: 5px;
     }
@@ -79,8 +80,17 @@
     }
 }
 
+
+
 .order-list {
     margin-top: 10px;
+
+    .disableOrdersInRetroMode {
+        pointer-events: none;
+        z-index: 1001;
+        opacity: .4;
+        filter: alpha(opacity=40);
+    }
     .order-grid {
         border: 1px solid #669999;
         border-radius: 5px 5px 0 0;

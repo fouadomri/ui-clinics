@@ -1,4 +1,5 @@
 <div class="order-list">
+    <div ng-class="{'disableOrdersInRetroMode':isRetrospectiveMode()}">
     <div ng-repeat="tab in tabs" class="{{tab.klass}}">
         <div class="order-grid"  ng-click="activateTab(tab)">
             <h2 class="order-title">
@@ -15,4 +16,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>
