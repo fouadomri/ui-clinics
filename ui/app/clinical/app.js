@@ -10,8 +10,7 @@ angular.module('consultation', ['ui.router', 'bahmni.clinical', 'bahmni.common.c
     'bahmni.common.displaycontrol.pacsOrders', 'bahmni.common.uicontrols.programmanagment', 'pascalprecht.translate', 'ngCookies']);
 angular.module('consultation')
     .config(['$stateProvider', '$httpProvider', '$urlRouterProvider', '$bahmniTranslateProvider', function ($stateProvider, $httpProvider, $urlRouterProvider, $bahmniTranslateProvider) {
-        const DEFAULT_STRING = 'default';
-        $urlRouterProvider.otherwise('/' + DEFAULT_STRING + '/patient/search');
+        $urlRouterProvider.otherwise('/' + Bahmni.Clinical.Constants.defaultExtensionName + '/patient/search');
         var patientSearchBackLink = {
             label: "",
             state: "patientsearch",
@@ -31,8 +30,7 @@ angular.module('consultation')
                         template: '<div ui-view="content"></div>'
                     }
                 }
-            }
-            )
+            })
             .state('patientsearch', {
                 url: '/patient/search',
                 parent: 'context',
@@ -51,7 +49,7 @@ angular.module('consultation')
                 },
                 resolve: {
                     initializeConfigs: function (initialization, $stateParams) {
-                        $stateParams.configName = $stateParams.configName || DEFAULT_STRING;
+                        $stateParams.configName = $stateParams.configName || Bahmni.Clinical.Constants.defaultExtensionName;
                         patientSearchBackLink.state = 'patientsearch({configName: \"' + $stateParams.configName + '\"})';
                         return initialization($stateParams.configName);
                     }
@@ -77,8 +75,8 @@ angular.module('consultation')
                     }
                 },
                 resolve: {
-                    initialization: function(initialization, $stateParams) {
-                        $stateParams.configName = $stateParams.configName  || "DEFAULT";
+                    initialization: function (initialization, $stateParams) {
+                        $stateParams.configName = $stateParams.configName || Bahmni.Clinical.Constants.defaultExtensionName;
                         return initialization($stateParams.configName);
                     },
                     patientContext: function (initialization, patientInitialization, $stateParams) {

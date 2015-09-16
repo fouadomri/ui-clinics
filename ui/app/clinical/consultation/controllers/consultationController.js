@@ -20,7 +20,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
 
             $scope.gotoPatientDashboard = function () {
                 if (contextChangeHandler.execute()["allow"]) {
-                    $location.path("/patient/" + patientContext.patient.uuid + "/dashboard");
+                    $location.path(stateParams.configName+"/patient/" + patientContext.patient.uuid + "/dashboard");
                 }
             };
 

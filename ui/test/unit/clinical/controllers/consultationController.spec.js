@@ -2,7 +2,7 @@
 
 describe("ConsultationController", function () {
 
-    var scope, rootScope, state, contextChangeHandler, urlHelper, location, clinicalAppConfigService;
+    var scope, rootScope, state, contextChangeHandler, urlHelper, location, clinicalAppConfigService, stateParams;
 
     beforeEach(module('bahmni.clinical'));
 
@@ -10,6 +10,7 @@ describe("ConsultationController", function () {
         scope = $rootScope.$new();
         rootScope = $rootScope;
         clinicalAppConfigService = {getAllConsultationBoards: function() {return []}};
+        stateParams = {configName: 'default'};
         location = {path: function() {}, url: function(url) {return url}};
         state = {params: {encounterUuid: "someEncounterUuid", programUuid: "someProgramUuid", patientUuid: "somePatientUuid"}};
         contextChangeHandler = {execute: function() {return {allow: true}}, reset: function() {}};
@@ -22,6 +23,7 @@ describe("ConsultationController", function () {
             $scope: scope,
             $rootScope: rootScope,
             $state: state,
+            $stateParams: stateParams,
             $location:location,
             clinicalAppConfigService: clinicalAppConfigService,
             urlHelper: urlHelper,
@@ -51,7 +53,7 @@ describe("ConsultationController", function () {
         var treatmentBoard = {label: "Treatment", url: "treatment"};
         scope.availableBoards.push(obsBoard, treatmentBoard);
         var newUrl = scope.showBoard("Treatment");
-        expect(newUrl).toEqual("/patient/somePatientUuid/treatment?encounterUuid=someEncounterUuid&programUuid=someProgramUuid");
+        expect(newUrl).toEqual("/default/patient/somePatientUuid/treatment?encounterUuid=someEncounterUuid&programUuid=someProgramUuid");
     });
 
     it("should not append encounterUuid in query params if not available", function() {
@@ -60,7 +62,7 @@ describe("ConsultationController", function () {
         scope.availableBoards.push(obsBoard, treatmentBoard);
         state.params.encounterUuid = null;
         var newUrl = scope.showBoard("Treatment");
-        expect(newUrl).toEqual("/patient/somePatientUuid/treatment?programUuid=someProgramUuid");
+        expect(newUrl).toEqual("/default/patient/somePatientUuid/treatment?programUuid=someProgramUuid");
     });
 
     it("should not append programUuid in query params if not available", function() {
@@ -69,7 +71,7 @@ describe("ConsultationController", function () {
         scope.availableBoards.push(obsBoard, treatmentBoard);
         state.params.programUuid = null;
         var newUrl = scope.showBoard("Treatment");
-        expect(newUrl).toEqual("/patient/somePatientUuid/treatment?encounterUuid=someEncounterUuid");
+        expect(newUrl).toEqual("/default/patient/somePatientUuid/treatment?encounterUuid=someEncounterUuid");
     });
 
 });
