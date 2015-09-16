@@ -8,6 +8,7 @@ body {
 }
 body.show-controller-back.ngdialog-open{
  overflow: auto !important;
+  overflow-x: hidden !important;
 }
 body pre {
   font-family: $OpenSansFont;

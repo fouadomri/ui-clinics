@@ -84,13 +84,6 @@
 
 .order-list {
     margin-top: 10px;
-
-    .disableOrdersInRetroMode {
-        pointer-events: none;
-        z-index: 1001;
-        opacity: .4;
-        filter: alpha(opacity=40);
-    }
     .order-grid {
         border: 1px solid #669999;
         border-radius: 5px 5px 0 0;
@@ -217,6 +210,19 @@
             }
         }
     }
+    .disableOrdersInRetroMode {
+        .dashboard-section-wrapper .order-section-container .orderBtn{
+            pointer-events: none;
+            background: #EEE;
+            border: #CCC 1px solid;
+            color: #999;
+        }
+        .fa-remove{
+            pointer-events: none;
+            background: #EEE;
+        }
+    }
+
 }
 
 .new-order-highlight {

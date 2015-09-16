@@ -1,11 +1,5 @@
 .disposition-tab {
   margin: 15px 5px;
-  .disableInRetroMode {
-    pointer-events: none;
-    z-index: 1001;
-    opacity: .4;
-    filter: alpha(opacity=40);
-  }
   textarea {
     margin: 10px 0;
     width: 97.8%;
