@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('DashboardHeaderController', ['$window', '$scope', 'clinicalAppConfigService', 'patientContext', 'visitHistory', 'clinicalDashboardConfig','appService','ngDialog',
-        function ($window, $scope, clinicalAppConfigService, patientContext, visitHistory, clinicalDashboardConfig, appService, ngDialog) {
+    .controller('DashboardHeaderController', ['$window', '$scope', 'clinicalAppConfigService', 'patientContext', 'visitHistory', 'clinicalDashboardConfig','appService','ngDialog','visitSummary','spinner','diseaseTemplateService','$state',
+        function ($window, $scope, clinicalAppConfigService, patientContext, visitHistory, clinicalDashboardConfig, appService, ngDialog, visitSummary, spinner, diseaseTemplateService, $state) {
 
             $scope.patient = patientContext.patient;
             $scope.visitHistory = visitHistory;
@@ -35,6 +35,34 @@ angular.module('bahmni.clinical')
             };
 
             $scope.closeAllDialogs = function() {
+                $scope.myState = true;
                 ngDialog.closeAll();
             };
+
+            $scope.activeVisit = $scope.visitHistory.activeVisit;
+            $scope.activeVisitData = {};
+            $scope.obsIgnoreList = clinicalAppConfigService.getObsIgnoreList();
+            $scope.clinicalDashboardConfig = clinicalDashboardConfig;
+            $scope.visitSummary = visitSummary;
+
+            $scope.$on("event:switchDashboard", function (event, dashboard) {
+                $scope.init(dashboard);
+            });
+
+            $scope.$on("event:printDashboard", function (event) {
+                printer.printFromScope("dashboard/views/dashboardPrint.html", $scope);
+            });
+
+            $scope.init = function (dashboard) {
+                clinicalDashboardConfig.switchTab(dashboard);
+                return diseaseTemplateService.getLatestDiseaseTemplates($scope.patient.uuid, clinicalDashboardConfig.getDiseaseTemplateSections())
+                    .then(function (diseaseTemplates) {
+                        $scope.diseaseTemplates = diseaseTemplates;
+                        $scope.dashboard = Bahmni.Common.DisplayControl.Dashboard.create(dashboard || {});
+                        $scope.sectionGroups =  $scope.dashboard.getSections($scope.diseaseTemplates);
+                        $scope.currentDashboardTemplateUrl = $state.current.views.content.templateUrl;
+                    });
+            };
+
+            spinner.forPromise($scope.init(clinicalDashboardConfig.currentTab));
         }]);

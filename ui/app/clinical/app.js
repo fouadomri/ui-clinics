@@ -90,16 +90,11 @@ angular.module('consultation')
                     }
                 }
             })
-            .state('patient.dashboard', {
-                url: '/dashboard',
-                views: {
-                    'additional-header': {
-                        templateUrl: 'dashboard/views/dashboardHeader.html',
-                        controller: 'DashboardHeaderController'
-                    },
-                    'content': {
-                        templateUrl: 'dashboard/views/dashboard.html',
-                        controller: 'PatientDashboardController'
+            .state('patient.something',{
+                abstract: true,
+                views:{
+                    content: {
+                        template: '<div ui-view="content"></div>'
                     }
                 },
                 resolve: {
@@ -114,16 +109,21 @@ angular.module('consultation')
                     }
                 }
             })
-            .state('patient.dashboard.tab', {
-                url: '/:tab',
+            .state('patient.something.dashboard', {
+                url: '/dashboard',
                 views: {
-                    'additional-header': {
+                    'content': {
                         templateUrl: 'dashboard/views/dashboardHeader.html',
                         controller: 'DashboardHeaderController'
-                    },
+                    }
+                }
+            })
+            .state('patient.something.dashboard.tab', {
+                url: '/:tab',
+                views: {
                     'content': {
-                        templateUrl: 'dashboard/views/dashboard.html',
-                        controller: 'PatientDashboardController'
+                        templateUrl: 'dashboard/views/dashboardHeader.html',
+                        controller: 'DashboardHeaderController'
                     }
                 },
                 resolve: {
@@ -191,22 +191,14 @@ angular.module('consultation')
                     }
                 }
             })
-            .state('patient.consultation', {
-                url: '',
+            .state('patient.something.consultation', {
                 abstract: true,
-                data: {
-                    backLinks: [patientSearchBackLink]
-                },
                 views: {
-                    'additional-header': {
+                    'content': {
                         templateUrl: 'consultation/views/header.html',
                         controller: 'ConsultationController'
-                    },
-                    'content': {
-                        template: '<ui-view/>'
                     }
-                },
-                resolve: {}
+                }
             })
             .state('patient.consultation.visit', {
                 url: '/visit/:visitUuid',
@@ -274,7 +266,7 @@ angular.module('consultation')
                 templateUrl: 'consultation/views/disposition.html',
                 controller: 'DispositionController'
             })
-            .state('patient.consultation.observations', {
+            .state('patient.something.consultation.observations', {
                 url: '/concept-set-group/:conceptSetGroupName',
                 templateUrl: 'consultation/views/conceptSet.html',
                 controller: 'ConceptSetPageController'

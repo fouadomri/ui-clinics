@@ -1,6 +1,6 @@
 <div class="opd-header-wrapper clinical-consultation" id="opd-tabs">
 
-    <div class="opd-header-bottom tabs">    
+    <div class="opd-header-bottom tabs">
         <bm-back-links></bm-back-links>
         <a show-if-privilege="app:adt" class="back-btn" ng-href="../adt/#/patient/{{patient.uuid}}/visit/{{consultation.visitUuid}}/"
            title="Go to IPD dashboard">
@@ -13,7 +13,7 @@
                 <span class="patient-id">{{patient.identifier}}</span>
             </span>
         </a>
-           
+
 
         <ul class="header-tabs consultation-tabs">
             <li class="tab-item" ng-repeat="board in availableBoards" ng-class="{'tab-selected':currentBoard.label==board.label}">
@@ -26,8 +26,9 @@
             <i class="fa fa-bars fa-white fa-large"></i>
         </button>
         <button class="confirm save-consultation" ng-show="availableBoards" ng-click="save()" accesskey="s" class="confirm">
-            <i class="fa fa-save"></i> 
+            <i class="fa fa-save"></i>
             <span class="text"><u>S</u>ave</span>
         </button>
     </div>
 </div>
+<ui-view/>
