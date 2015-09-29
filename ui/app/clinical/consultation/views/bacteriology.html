@@ -1,0 +1,25 @@
+<form ng-submit="addSample()">
+    <label for="sample-date">Date of Sample Collection: </label>
+    <input id="sample-date" type="date" ng-model="newSample.dateCollected" required="required">
+
+    <label for="sample-type">Type of sample: </label>
+    <select required="required" id="sample-type" class="form-field bulk-duration-unit" ng-model="newSample.type"
+            ng-options="sample.name.display as sample.name.display for sample in allSamples">
+        <option></option>
+    </select>
+
+    <label for="sample-id">Sample Id: </label>
+    <input id="sample-id" type="text" ng-model="newSample.identifier">
+
+    <concept-set patient="patient" concept-set-name="conceptSetName" observations="newSample.additionalAttributes" ng-if="newSample.dateCollected"></concept-set>
+
+    <input type="submit" value="Add Sample">
+    <input type="button" value="Clear" ng-click="clearNewSample()">
+</form>
+
+<div ng-repeat="sample in newSamples track by $index">
+    <span>{{sample.type}}</span>
+    <span ng-if="sample.identifier">#{{sample.identifier}}</span>
+    <span>Added on {{sample.dateCollected | date:'dd/MM/yyyy'}}</span>
+    <button ng-click="editSample(sample)">Edit</button>
+</div>
