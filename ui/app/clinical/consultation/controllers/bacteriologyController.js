@@ -5,7 +5,7 @@ angular.module('bahmni.clinical')
         function ($scope, $rootScope, contextChangeHandler, spinner, conceptSetService, messagingService) {
             $scope.newSamples = [];
             $scope.newSample = {"additionalAttributes": []};
-            $scope.conceptSetName = "Vitals";
+            $scope.conceptSetName = "Tubercolises Specimen Concepot Set";
             var init = function () {
                 spinner.forPromise(conceptSetService.getConceptSetMembers({
                     name: Bahmni.Clinical.Constants.labConceptSetName,
@@ -36,6 +36,10 @@ angular.module('bahmni.clinical')
                 } else {
                     messagingService.showMessage('formError', Bahmni.Clinical.Constants.errorMessages.incompleteForm);
                 }
+            };
+
+            $scope.removeSample = function(sample){
+                $scope.newSamples = _.without($scope.newSamples, sample);
             };
 
             init();

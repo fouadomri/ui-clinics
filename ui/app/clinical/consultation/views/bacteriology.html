@@ -1,3 +1,4 @@
+<h1>Sample Details</h1>
 <form ng-submit="addSample()">
     <label for="sample-date">Date of Sample Collection: </label>
     <input id="sample-date" type="date" ng-model="newSample.dateCollected" required="required">
@@ -11,7 +12,8 @@
     <label for="sample-id">Sample Id: </label>
     <input id="sample-id" type="text" ng-model="newSample.identifier">
 
-    <concept-set patient="patient" concept-set-name="conceptSetName" observations="newSample.additionalAttributes" ng-if="newSample.dateCollected"></concept-set>
+    <concept-set patient="patient" concept-set-name="conceptSetName" observations="newSample.additionalAttributes"
+                 ng-if="newSample.dateCollected"></concept-set>
 
     <input type="submit" value="Add Sample">
     <input type="button" value="Clear" ng-click="clearNewSample()">
@@ -22,4 +24,17 @@
     <span ng-if="sample.identifier">#{{sample.identifier}}</span>
     <span>Added on {{sample.dateCollected | date:'dd/MM/yyyy'}}</span>
     <button ng-click="editSample(sample)">Edit</button>
+    <button ng-click="removeSample(sample)">X</button>
+
+    <section class="block hierarchy">
+        <ul class="form-field">
+            <li>
+                <ul>
+                    <bahmni-observation patient="patient" config="config" section="section"
+                                        section-title="section.translationKey" is-on-dashboard="false"
+                                        observations="sample.additionalAttributes"></bahmni-observation>
+                </ul>
+            </li>
+        </ul>
+    </section>
 </div>

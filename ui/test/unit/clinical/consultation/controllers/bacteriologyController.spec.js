@@ -1,4 +1,4 @@
-ddescribe("Bacteriology Controller", function () {
+describe("Bacteriology Controller", function () {
     var $scope, rootScope, contextChangeHandler, spinner, conceptSetService;
 
     beforeEach(module('bahmni.clinical'));
@@ -65,5 +65,16 @@ ddescribe("Bacteriology Controller", function () {
             expect($scope.newSamples.length).toBe(1);
             expect($scope.newSample).toBe(newSample1);
         });
-    })
+    });
+
+    describe("Remove Sample", function () {
+        var newSample1 = {dateCollected: "2015-10-01T18:30:00.000Z", type: "Blood", identifier: "1234"};
+        var newSample2 = {dateCollected: "2015-11-01T18:30:00.000Z", type: "Blood", identifier: "1234"};
+        it("should remove sample", function () {
+            $scope.newSamples = [newSample1, newSample2];
+            $scope.removeSample(newSample1);
+            expect($scope.newSamples.length).toBe(1);
+            expect($scope.newSamples[0]).toBe(newSample2);
+        });
+    });
 });
