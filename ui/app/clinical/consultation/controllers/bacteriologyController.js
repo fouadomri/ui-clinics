@@ -16,7 +16,7 @@ angular.module('bahmni.clinical')
             };
 
             $scope.clearNewSample = function () {
-                $scope.newSample = {"additionalAttributes": []};
+                $scope.newSample = {"sample": {"additionalAttributes": []}};
             };
 
             var isFormCleared = function () {
@@ -25,14 +25,14 @@ angular.module('bahmni.clinical')
 
             $scope.addSample = function () {
                 console.log($scope.newSample);
-                $scope.newSamples.push($scope.newSample);
+                $scope.newSamples = $scope.newSample;
                 $scope.consultation.extentions = {"mdrtb.specimen": $scope.newSamples};
                 $scope.clearNewSample();
             };
 
             $scope.editSample = function (sample) {
                 if (isFormCleared()) {
-                    $scope.newSample = sample;
+                    $scope.newSample.sample = sample;
                     $scope.newSamples = _.without($scope.newSamples, sample);
                 } else {
                     messagingService.showMessage('formError', Bahmni.Clinical.Constants.errorMessages.incompleteForm);
