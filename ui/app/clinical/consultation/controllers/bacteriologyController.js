@@ -26,6 +26,7 @@ angular.module('bahmni.clinical')
             $scope.addSample = function () {
                 console.log($scope.newSample);
                 $scope.newSamples.push($scope.newSample);
+                $scope.consultation.extentions = {"mdrtb.specimen": $scope.newSamples};
                 $scope.clearNewSample();
             };
 
