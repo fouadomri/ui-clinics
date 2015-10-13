@@ -1,0 +1,6 @@
+<section class="dashboard-section ng-scope">
+    <h2 ng-if="hasTitleToBeShown()" class="section-title">{{section | titleTranslate}}</h2>
+
+    <bahmni-observation is-on-dashboard="true" patient="patient" section="section" config="section.dashboardParams" section-title="section.translationKey"
+                        ng-repeat="result in ::results" observations="result" ></bahmni-observation>
+</section>
