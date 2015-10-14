@@ -9,7 +9,6 @@ angular.module('bahmni.common.bacteriologyresults')
                 includeObs: data.includeObs,
                 patientUuid: data.patientUuid,
                 scope: data.scope
-
         };
 
             return $http.get(Bahmni.Common.Constants.observationsUrl, {

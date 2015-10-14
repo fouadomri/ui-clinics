@@ -1,6 +1,12 @@
 <section class="dashboard-section ng-scope">
-    <h2 ng-if="hasTitleToBeShown()" class="section-title">{{section | titleTranslate}}</h2>
+    <h2 class="section-title">{{section | titleTranslate}}</h2>
 
-    <bahmni-observation is-on-dashboard="true" patient="patient" section="section" config="section.dashboardParams" section-title="section.translationKey"
-                        ng-repeat="result in ::results" observations="result" ></bahmni-observation>
+    <div ng-repeat="specimen in ::specimens">
+        <span>{{specimen.specimenSource}} ... {{specimen.specimenId}} ... {{specimen.specimenCollectionDate}} </span>
+
+        <bahmni-observation is-on-dashboard="false" patient="patient"
+                            observations="specimen.sampleResult" ></bahmni-observation>
+
+    </div>
+
 </section>

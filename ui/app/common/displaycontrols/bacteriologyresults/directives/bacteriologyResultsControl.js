@@ -5,67 +5,49 @@ angular.module('bahmni.common.displaycontrol.bacteriologyresults')
         function (bacteriologyResultsService, $q, spinner, $filter) {
             var controller = function($scope){
 
-                if ($scope.config.showHeader === null || $scope.config.showHeader === undefined) {
-                    $scope.config.showHeader = true;
-                }
-
-                var includeAllObs = true;
-                var getBacteriologyResults = function () {
+                var init = function () {
+                    $scope.title = "bacteriology results";
                     var params = {
                         patientUuid:$scope.patient.uuid,
                         scope: $scope.scope,
-                        conceptNames:$scope.config.conceptNames,
-                        includeObs:includeAllObs
+                        numberOfVisits:2,
+                        conceptNames:"BACTERIOLOGY CONCEPT SET",
+                        includeObs:false
                     };
                     return bacteriologyResultsService.getBacteriologyResults(params).then(function (response) {
-                        $scope.bahmniObservations = response.data;
+                        handleResponse(response);
                     });
                 };
-                var init = function() {
-                    return getBacteriologyResults().then(function(){
-                        var results = [];
-                        _.forEach($scope.bahmniObservations, function(observation){
+
+                var handleResponse = function(response){
+                    var observations = response.data;
+                    if(observations && observations.length>0){
+                        $scope.specimens = [];
+
+                        _.forEach(observations, function(observation){
+                            var specimen = {};
                             _.forEach(observation.groupMembers,function(testObs){
-                               if(testObs.concept.name=="Bacteriology Results"){
-                                   results.push(testObs);
-                               }
+                                if(testObs.concept && testObs.concept.name === "Bacteriology Results"){
+                                    specimen.sampleResult = [testObs];
+                                }
+                                if(testObs.concept && testObs.concept.name === "Specimen Sample Source"){
+                                    specimen.specimenSource = testObs.valueAsString;
+                                }
+                                if(testObs.concept && testObs.concept.name === "Specimen Id"){
+                                    specimen.specimenId= testObs.valueAsString;
+                                }
+                                if(testObs.concept && testObs.concept.name === "Specimen Collection Date"){
+                                    specimen.specimenCollectionDate = testObs.valueAsString;
+                                }
+
                             });
-
+                            $scope.specimens.push(specimen);
                         });
-                        $scope.results = results;
-                        if (_.isEmpty($scope.bahmniObservations)) {
-                            $scope.noObservationsMessage = $scope.section.translationKey;
-                        }
-                        else{
-                            $scope.bahmniObservations[0].isOpen = true;
-                        }
-                    });
-                };
-                $scope.getTitle = function(observation){
-                    return observation.conceptName + " on " + $filter('bahmniDateTime')(observation.observationDate) + " by " + observation.provider;
-                };
+                    }
 
-                $scope.toggle= function(element){
-                    element.isOpen = !element.isOpen;
-                };
-
-                $scope.dialogData = {
-                    "patient": $scope.patient,
-                    "section": $scope.section
-                };
-
-                $scope.isClickable= function(){
-                    return $scope.isOnDashboard ;
-                };
-
-                $scope.hasTitleToBeShown = function() {
-                    return !$scope.isClickable() && $scope.getSectionTranslationKey();
-                };
-
-                $scope.message = Bahmni.Common.Constants.messageForNoFulfillment;
-
-                $scope.getSectionTranslationKey = function(){
-                    return $scope.section.translationKey;
+                    if (_.isEmpty(observations)) {
+                        $scope.noObservationsMessage = $scope.section.translationKey;
+                    }
                 };
 
                 spinner.forPromise(init());
