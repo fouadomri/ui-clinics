@@ -209,6 +209,9 @@ pre.chief-notes {
 
 .has-notes {
     color: orange;
+    i{
+      color: orange !important;
+    }
 }
 /*home*/
 .bahmni-home {
@@ -258,3 +261,4 @@ u, .add-drug-btninput[value]:first-letter {
 .fa-pencil{
   cursor: pointer;
 }
+

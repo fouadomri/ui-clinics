@@ -255,7 +255,11 @@
 .treatment-section {
   table {
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+    //margin-bottom: 10px;
+    td,th{
+      border: 0;
+    }
     tr.title th {
       background: $bahmniTableHeaderBg;
       font-size: 14px;
@@ -267,6 +271,7 @@
       .discontinued-text {
         display: block;
         color: $mediumGray;
+        font-size: 12px;
       }
     }
     .drugorder-date {

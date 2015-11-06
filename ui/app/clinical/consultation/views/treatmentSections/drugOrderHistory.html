@@ -1,5 +1,4 @@
 <section class="drug-orders-history" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-
     <div ng-if="drugOrderGroupsEmpty()">
         <p class="placeholder-text">No prescriptions saved yet</p>
     </div>
@@ -56,7 +55,7 @@
                                 <div class="start-date fr">
                                     <span ng-if="showEffectiveFromDate(drugOrderGroup.visitStartDate, drugOrder.effectiveStartDate)"> from {{drugOrder.effectiveStartDate | bahmniDate}}</span>
                                     <br/>
-                                    <span ng-if="drugOrder.isDiscontinuedOrStopped()">stopped {{drugOrder.effectiveStopDate | bahmniDate}}</span>
+                                    <span ng-if="drugOrder.isDiscontinuedOrStopped()" class="stop-date">stopped {{drugOrder.effectiveStopDate | bahmniDate}}</span>
                                 </div>
                                 <div ng-show="drugOrder.showAdditionalInstructions" class="notes inline-notes">
                                     {{drugOrder.additionalInstructions}}
