@@ -348,6 +348,25 @@ Bahmni.Clinical.DrugOrderViewModel = function (appConfig, config, proto, encount
         return self.isStopped() || self.discontinued();
     };
 
+    this.isRecentTab = function(drugOrderGroup){
+        if(drugOrderGroup&&drugOrderGroup.label.indexOf('Recent') >= 0){
+            return true;
+        }
+        return false;
+    };
+
+    this.showActiveDrugsIfRecentTab = function(drugOrderGroup) {
+        if(!self.isRecentTab(drugOrderGroup))
+        {
+           return true;
+        }
+        if(appConfig.showOnlyActiveDrugs)
+        {
+            return (self.isActive()&&!self.isScheduled());
+        }
+        return true;
+    };
+
     var defaultQuantityUnit = function(drugOrder) {
         if (!drugOrder.quantityUnit) {
             drugOrder.quantityUnit = "Unit(s)";

@@ -440,6 +440,57 @@ describe("drugOrderViewModel", function () {
         });
     });
 
+    describe("showActiveDrugsIfRecentTab", function() {
+        var createTreatment = function(showOnlyActiveDrugs,action) {
+            var appConfig = {
+                "showOnlyActiveDrugs": showOnlyActiveDrugs
+            };
+            var treatment = sampleTreatment(appConfig, [], null, Bahmni.Common.Util.DateUtil.now());
+            treatment.scheduledDate = null;
+            treatment.dateStopped = null;
+            treatment.effectiveStopDate = null;
+            treatment.action = action;
+            return treatment;
+
+        }
+
+        var createDrugOrderGroup = function(treatment,label){
+            var drugOrders = new Array(treatment);
+            var drugOrderGroup = new Bahmni.Clinical.OrdersMapper().group(drugOrders, 'date');
+            drugOrderGroup[0].label = label;
+            return drugOrderGroup[0];
+        }
+
+        it("should show only active drugs if configured", function() {
+             var treatment = createTreatment(true,'');
+             var drugOrderGroup = createDrugOrderGroup(treatment,'Recent');
+            expect(treatment.showActiveDrugsIfRecentTab(drugOrderGroup[0])).toBeTruthy();
+
+        });
+
+        it("should show all drugs if not configured", function() {
+              var treatment = createTreatment(false,'');
+              var drugOrderGroup = createDrugOrderGroup(treatment,'Recent');
+            expect(treatment.showActiveDrugsIfRecentTab(drugOrderGroup[0])).toBeTruthy();
+
+        });
+
+        it("should not show drugs on recent tab if discontinued", function() {
+            var treatment = createTreatment(true,'DISCONTINUE');
+            var drugOrderGroup = createDrugOrderGroup(treatment,'Recent');
+            expect(treatment.showActiveDrugsIfRecentTab(drugOrderGroup)).toBeFalsy();
+
+        });
+
+        it("should show all drugs on other tabs", function() {
+            var treatment = createTreatment(true,'DISCONTINUE');
+            var drugOrderGroup = createDrugOrderGroup(treatment,'16 Nov 15');
+            expect(treatment.showActiveDrugsIfRecentTab(drugOrderGroup)).toBeTruthy();
+
+        });
+
+    });
+
     function getFutureDate() {
         var today = new Date();
         today.setDate(today.getDate() + 7);
