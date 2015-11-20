@@ -22,7 +22,7 @@
                         <ul class="table-mimic">
 							<li id="ordered-drug-orders" ng-repeat="drugOrder in drugOrderGroup.drugOrders" ng-class="{'active-drug' : drugOrder.isActive(), 'highlight' : drugOrder.isBeingEdited, 'scheduled-drug': drugOrder.isScheduled()}">
                                 <div class="drug-details" ng-class="{'strike-through': drugOrder.isDiscontinuedOrStopped()}">
-                                    <strong class="drug-name">{{drugOrder.getDisplayName()}}</strong> 
+                                    <strong class="drug-name">{{drugOrder.getDisplayName()}}</strong>
                                     {{drugOrder.getDescriptionWithQuantity()}}
                                 </div>
 								<div class="button-group-wrapper">
@@ -68,6 +68,16 @@
                                             <provider-directive creator-name="{{drugOrder.creatorName}}" provider-name="{{drugOrder.provider.name}}"></provider-directive>
                                         </span>
                                     </div>
+                                </div>
+                                <div ng-if="drugOrder.isMarkedForDiscontinue">
+                                    <fieldset>
+                                    <input id="date-stopped"  type="date" max="{{::scheduledDate}}" ng-model="drugOrder.dateStopped"
+                                           required="required">
+                                        <select id="stopped-reason" class="form-field instruction" ng-model="drugOrder.orderReasonConcept" ng-options="item as item.display for item in stoppedOrderReasons">
+                                            <option value="">Reason</option>
+                                        </select>
+                                        <textarea id="stopped-reason-non-coded" class="form-field drug-order-notes" placeholder="Reason for stopping" ng-model="drugOrder.orderReasonText"></textarea>
+                                    </fieldset>
                                 </div>
 							</li>
 						</ul>
