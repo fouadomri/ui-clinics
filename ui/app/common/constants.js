@@ -152,6 +152,12 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniBacteriologyResultsUrl: BACTERIOLOGY + "/specimen",
         formDataUrl: RESTWS_V1 + "/obs",
         bedFromVisit: RESTWS_V1+ "/beds",
-        platform:"user.platform"
+        platform:"user.platform",
+        platformType: {
+            chrome: 'chrome',
+            android: 'android',
+            chromeApp: 'chrome-app',
+            other: 'other'
+        }
     };
 })();
