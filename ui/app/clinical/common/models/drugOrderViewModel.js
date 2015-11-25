@@ -569,7 +569,7 @@ Bahmni.Clinical.DrugOrderViewModel.createFromContract = function (drugOrderRespo
     if(drugOrderResponse.orderReasonConcept != null){
 
     viewModel.orderReasonConcept = {
-        name: drugOrderResponse.orderReasonConcept.name.name,
+        name: drugOrderResponse.orderReasonConcept.name.name || drugOrderResponse.orderReasonConcept.name,
         uuid: drugOrderResponse.orderReasonConcept.uuid
     }
     }

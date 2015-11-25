@@ -14,6 +14,7 @@ angular.module('bahmni.clinical')
             var activeDrugOrdersList = [];
             $scope.dispensePrivilege = Bahmni.Clinical.Constants.dispensePrivilege;
             $scope.scheduledDate = DateUtil.getDateWithoutTime(DateUtil.now());
+            $scope.minDateStopped = DateUtil.getDateWithoutTime(DateUtil.now());
 
             var createPrescriptionGroups = function (activeAndScheduledDrugOrders) {
                 $scope.consultation.drugOrderGroups = [];
@@ -89,6 +90,12 @@ angular.module('bahmni.clinical')
                     }));
                 }
             };
+            $scope.getOrderReasonConcept = function(drugOrder){
+                     if(drugOrder.orderReasonConcept && drugOrder.orderReasonConcept.name){
+                      return drugOrder.orderReasonConcept.name;
+                     }
+            };
+
 
             $scope.toggleShowAdditionalInstructions = function (line) {
                 line.showAdditionalInstructions = !line.showAdditionalInstructions;
@@ -124,8 +131,9 @@ angular.module('bahmni.clinical')
                 if (drugOrder.isDiscontinuedAllowed) {
                     drugOrder.isMarkedForDiscontinue = true;
                     drugOrder.isEditAllowed = false;
+                    drugOrder.dateStopped = DateUtil.parse(drugOrder.effectiveStopDate);
                     $scope.consultation.discontinuedDrugs.push(drugOrder);
-                    $scope.scheduledDate = Bahmni.Common.Util.DateUtil.getDateWithoutTime(DateUtil.parse(drugOrder.scheduledDate));
+                    $scope.minDateStopped = DateUtil.getDateWithoutTime(drugOrder.effectiveStartDate);
                 }
             };
 
@@ -156,6 +164,9 @@ angular.module('bahmni.clinical')
                     if(discontinuedDrug != null) {
                     removableOrder.orderReasonText = discontinuedDrug.orderReasonText;
                     removableOrder.dateStopped = discontinuedDrug.dateStopped;
+                        if(discontinuedDrug.dateStopped != null) {
+                            removableOrder.autoExpireDate = discontinuedDrug.dateStopped;
+                        }
                     if (discontinuedDrug.orderReasonConcept != null && discontinuedDrug.orderReasonConcept.name) {
                         removableOrder.orderReasonConcept = {
                             name: discontinuedDrug.orderReasonConcept.name.name,

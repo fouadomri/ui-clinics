@@ -56,7 +56,7 @@
                                 <div class="start-date fr">
                                     <span ng-if="showEffectiveFromDate(drugOrderGroup.visitStartDate, drugOrder.effectiveStartDate)"> from {{drugOrder.effectiveStartDate | bahmniDate}}</span>
                                     <br/>
-                                    <span ng-if="drugOrder.isDiscontinuedOrStopped()">stopped {{drugOrder.effectiveStopDate | bahmniDate}}</span>
+                                    <span ng-if="drugOrder.isDiscontinuedOrStopped()">stopped {{drugOrder.effectiveStopDate | bahmniDate}} due to {{drugOrder.orderReasonText}}. OrderReasonConcept: {{getOrderReasonConcept(drugOrder)}}</span>
                                 </div>
                                 <div ng-show="drugOrder.showAdditionalInstructions" class="notes inline-notes">
                                     {{drugOrder.additionalInstructions}}
@@ -71,7 +71,7 @@
                                 </div>
                                 <div ng-if="drugOrder.isMarkedForDiscontinue">
                                     <fieldset>
-                                    <input id="date-stopped"  type="date" max="{{::scheduledDate}}" ng-model="drugOrder.dateStopped"
+                                    <input id="date-stopped"  type="date" min="{{::minDateStopped}}"max="{{::scheduledDate}}" ng-model="drugOrder.dateStopped"
                                            required="required">
                                         <select id="stopped-reason" class="form-field instruction" ng-model="drugOrder.orderReasonConcept" ng-options="item as item.display for item in stoppedOrderReasons">
                                             <option value="">Reason</option>
